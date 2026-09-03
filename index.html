@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Didactics of the English Language II - Unit 3 - A4 Interactive Book</title>
+    <!-- Importación de Google Font: Quicksand -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-app: #1e293b;
+            --page-bg: #fcfaf7;
+            --text-main: #2d3748;
+            --title-green: #0ed179;
+            --border: #d2c9bd;
+            --page-width: 620px;
+            --page-height: 877px;
+            --transition-speed: 0.85s;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Quicksand', sans-serif !important;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: stretch;
+            height: 100vh;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .top-bar {
+            width: 100%;
+            padding: 12px 25px;
+            background: rgba(15, 23, 42, 0.8);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #334155;
+            z-index: 100;
+            order: 1;
+        }
+
+        .top-bar .title-badge {
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #e2e8f0;
+        }
+
+        .top-bar .format-badge {
+            background: var(--title-green);
+            color: #0f172a;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .book-stage {
+            width: 100%;
+            flex: 1 1 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 20px;
+            perspective: 2500px;
+            order: 2;
+            min-height: 0;
+        }
+
+        .book-wrapper {
+            width: calc(var(--page-width) * 2);
+            height: var(--page-height);
+            position: relative;
+            transform-origin: center center;
+            transition: transform 0.2s ease-out;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        .book {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .paper {
+            position: absolute;
+            width: var(--page-width);
+            height: var(--page-height);
+            top: 0;
+            right: 0;
+            transform-origin: left center;
+            transform-style: preserve-3d;
+            transition: transform var(--transition-speed) cubic-bezier(0.645, 0.045, 0.355, 1);
+            cursor: pointer;
+        }
+
+        .paper.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        .front,
+        .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: var(--page-bg);
+            padding: 40px 45px;
+            overflow: hidden;
+            backface-visibility: hidden;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .front {
+            border-radius: 0 6px 6px 0;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.15) 0%, rgba(255, 255, 255, 0) 8%, rgba(255, 255, 255, 0) 100%), url('https://blog.flamenco.com.co/wp-content/uploads/2026/07/fondo.webp');
+            background-size: cover;
+            background-position: center;
+            box-shadow: inset 15px 0 25px -10px rgba(0, 0, 0, 0.15);
+            border-bottom: none;
+        }
+
+        .front.cover {
+            background: url('https://blog.flamenco.com.co/wp-content/uploads/2026/07/pdfdiseno.webp') no-repeat center center;
+            background-size: cover;
+        }
+
+        .front.cover-back,
+        .back.cover-back {
+            background: url('https://blog.flamenco.com.co/wp-content/uploads/2026/07/contraportada-presencial.webp') no-repeat center center;
+            background-size: cover;
+        }
+
+        .back {
+            transform: rotateY(180deg);
+            border-radius: 6px 0 0 6px;
+            background: linear-gradient(to left, rgba(0, 0, 0, 0.15) 0%, rgba(255, 255, 255, 0) 8%, rgba(255, 255, 255, 0) 100%), url('https://blog.flamenco.com.co/wp-content/uploads/2026/07/fondo.webp');
+            background-size: cover;
+            background-position: center;
+            box-shadow: inset -15px 0 25px -10px rgba(0, 0, 0, 0.15);
+            border-bottom: none;
+        }
+
+        .page-header {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+        }
+
+        .page-content {
+            flex: 1 1 0%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            color: var(--title-green) !important;
+            font-size: 2.1rem;
+            line-height: 1.25;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        h2 {
+            color: var(--title-green) !important;
+            font-size: 1.35rem;
+            line-height: 1.3;
+            margin-top: 5px;
+            margin-bottom: 12px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--title-green);
+            font-weight: 700;
+        }
+
+        h3 {
+            color: var(--title-green) !important;
+            font-size: 1.05rem;
+            margin-top: 10px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+            text-align: justify;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        ul,
+        ol {
+            margin-left: 20px;
+            margin-bottom: 12px;
+            font-size: 0.88rem;
+            line-height: 1.45;
+            font-weight: 500;
+        }
+
+        li {
+            margin-bottom: 5px;
+            padding-left: 2px;
+        }
+
+        .cover {
+            background: url('https://blog.flamenco.com.co/wp-content/uploads/2026/07/pdfdiseno.webp') no-repeat center center !important;
+            background-size: cover !important;
+            border: 1px solid var(--border);
+            position: relative;
+            padding: 0;
+        }
+
+        .cover-content {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            width: 100%;
+            padding: 0 45px;
+            text-align: center;
+            line-height: 0.2;
+        }
+
+        .cover h1 {
+            color: var(--title-green) !important;
+            font-size: 2.1rem;
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .cover .unit-tag {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        .cover .subtitle {
+            font-size: 1.1rem;
+            color: #f8fafc;
+            font-weight: 600;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+            line-height: 1.4;
+        }
+
+        .toc-title {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .toc-list {
+            list-style: none;
+            margin-left: 0;
+            width: 100%;
+        }
+
+        .toc-item {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: 10px;
+            font-size: 0.92rem;
+        }
+
+        .toc-item .toc-text {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .toc-item .toc-dots {
+            flex-grow: 1;
+            border-bottom: 2px dotted #94a3b8;
+            margin: 0 10px;
+            position: relative;
+            top: -4px;
+        }
+
+        .toc-item .toc-page {
+            font-weight: 700;
+            color: var(--title-green);
+            min-width: 25px;
+            text-align: right;
+        }
+
+        .page-footer {
+            font-size: 0.8rem;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            margin-top: auto;
+            font-weight: 600;
+        }
+
+        .page-footer .page-num {
+            font-weight: 700;
+            color: #0f172a;
+            background: var(--title-green);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .bottom-bar {
+            width: 100%;
+            padding: 15px 30px;
+            background: rgba(15, 23, 42, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            z-index: 100;
+            border-top: 1px solid #334155;
+            order: 3;
+        }
+
+        .btn-nav {
+            background-color: var(--title-green);
+            color: #0f172a;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-nav:hover {
+            background-color: #0bc16f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-nav:disabled {
+            background-color: #475569;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            opacity: 0.6;
+        }
+
+        .status-indicator {
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: #334155;
+            padding: 8px 18px;
+            border-radius: 20px;
+            min-width: 150px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            font-size: 0.82rem;
+        }
+
+        .content-table th {
+            border-bottom: 2px solid var(--title-green);
+            text-align: left;
+            padding: 6px;
+            color: var(--title-green);
+        }
+
+        .content-table td {
+            border-bottom: 1px solid var(--border);
+            padding: 6px;
+            vertical-align: top;
+        }
+
+        .source-note {
+            font-size: 0.75rem;
+            font-style: italic;
+            color: #64748b;
+            text-align: right;
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --page-width: 100vw;
+                --page-height: calc(100dvh - 110px);
+                --mobile-top-height: 56px;
+                --mobile-nav-height: 54px;
+                --mobile-font-scale: 0.72;
+            }
+
+            @media (max-height: 599px) {
+                :root {
+                    --mobile-top-height: 48px;
+                    --mobile-nav-height: 48px;
+                    --mobile-font-scale: 0.58;
+                    --mobile-content-padding: 36px 18px 48px 18px;
+                    --mobile-cover-bottom: 40px;
+                }
+            }
+
+            @media (min-height: 600px) and (max-height: 699px) {
+                :root {
+                    --mobile-top-height: 52px;
+                    --mobile-nav-height: 50px;
+                    --mobile-font-scale: 0.64;
+                    --mobile-content-padding: 46px 22px 60px 22px;
+                    --mobile-cover-bottom: 52px;
+                }
+            }
+
+            @media (min-height: 700px) and (max-height: 799px) {
+                :root {
+                    --mobile-font-scale: 0.68;
+                    --mobile-content-padding: 54px 24px 70px 24px;
+                    --mobile-cover-bottom: 62px;
+                }
+            }
+
+            @media (min-height: 800px) {
+                :root {
+                    --mobile-font-scale: 0.76;
+                    --mobile-content-padding: 60px 26px 80px 26px;
+                    --mobile-cover-bottom: 70px;
+                }
+            }
+
+            html, body {
+                height: 100%;
+                min-height: 100dvh;
+                overflow: hidden;
+            }
+
+            body {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: stretch;
+            }
+
+            .top-bar {
+                order: 1;
+                flex: 0 0 var(--mobile-top-height);
+                padding: 8px 15px;
+                font-size: clamp(0.7rem, 2vw, 0.85rem);
+                min-height: var(--mobile-top-height);
+            }
+
+            .bottom-bar {
+                order: 2;
+                flex: 0 0 var(--mobile-nav-height);
+                border-top: none;
+                border-bottom: 1px solid #334155;
+                padding: 8px 12px;
+                gap: 8px;
+                min-height: var(--mobile-nav-height);
+            }
+
+            .btn-nav {
+                padding: 7px 12px;
+                font-size: clamp(0.7rem, 3.5vw, 0.85rem);
+                border-radius: 18px;
+                flex: 1 1 auto;
+                white-space: nowrap;
+                min-width: 0;
+            }
+
+            .status-indicator {
+                font-size: clamp(0.65rem, 3vw, 0.8rem);
+                padding: 5px 8px;
+                min-width: auto;
+                flex: 0 0 auto;
+            }
+
+            .book-stage {
+                order: 3;
+                flex: 1 1 auto;
+                height: calc(100dvh - var(--mobile-top-height) - var(--mobile-nav-height));
+                min-height: 0;
+                padding: 0;
+                align-items: stretch;
+                overflow: hidden;
+            }
+
+            .book-wrapper {
+                width: var(--page-width);
+                height: 100%;
+                transform: none !important;
+                box-shadow: none;
+            }
+
+            .paper {
+                width: 100%;
+                height: 100%;
+                left: 0;
+                top: 0;
+                right: 0;
+                transform: none !important;
+                transition: none;
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .paper.active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+            .paper.active .front,
+            .paper.active.flipped .front {
+                display: flex !important;
+            }
+
+            .paper.active .back {
+                display: none !important;
+                transform: none !important;
+            }
+
+            .paper.active.flipped .front {
+                display: none !important;
+            }
+
+            .paper.active.flipped .back {
+                display: flex !important;
+                transform: none !important;
+            }
+
+            .back {
+                transform: none !important;
+            }
+
+            .front:not(.cover),
+            .back:not(.cover-back) {
+                border-radius: 0;
+                padding: var(--mobile-content-padding, 60px 26px 80px 26px);
+                background: url('https://blog.flamenco.com.co/wp-content/uploads/2026/07/fondo-celular-final.webp') no-repeat center center !important;
+                background-size: cover !important;
+                box-shadow: none;
+                overflow: hidden;
+                cursor: default;
+                justify-content: space-between;
+            }
+
+            .front.cover,
+            .front.cover-back,
+            .back.cover-back {
+                border-radius: 0;
+                padding: 0;
+                box-shadow: none;
+                background-size: cover !important;
+            }
+
+            .front.cover {
+                background: url('https://blog.flamenco.com.co/wp-content/uploads/2026/07/portada-celular.webp') no-repeat center center !important;
+                background-size: 100% 100% !important;
+            }
+
+            .front.cover-back,
+            .back.cover-back {
+                background: url('https://blog.flamenco.com.co/wp-content/uploads/2026/07/contraportada-celular.webp') no-repeat center center !important;
+                background-size: 100% 100% !important;
+            }
+
+            .cover-content {
+                bottom: var(--mobile-cover-bottom, 70px);
+                padding: 0 clamp(18px, 5vw, 45px);
+            }
+
+            .cover h1 {
+                font-size: calc(2rem * var(--mobile-font-scale, 0.72));
+            }
+
+            .cover .unit-tag {
+                font-size: calc(1rem * var(--mobile-font-scale, 0.72));
+                letter-spacing: 2px;
+            }
+
+            .cover .subtitle {
+                font-size: calc(1rem * var(--mobile-font-scale, 0.72));
+            }
+
+            .page-header {
+                font-size: calc(0.95rem * var(--mobile-font-scale, 0.72));
+                padding-bottom: 6px;
+                margin-bottom: 14px;
+                flex-shrink: 0;
+            }
+
+            .page-content {
+                flex: 1 1 auto;
+                min-height: 0;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-right: 4px;
+                margin-bottom: 0;
+                font-size: calc(1rem * var(--mobile-font-scale, 0.72));
+            }
+
+            .page-content h1 { font-size: calc(2.1rem * var(--mobile-font-scale, 0.72)); }
+            .page-content h2 { font-size: calc(1.45rem * var(--mobile-font-scale, 0.72)); }
+            .page-content h3 { font-size: calc(1.15rem * var(--mobile-font-scale, 0.72)); }
+            .page-content p,
+            .page-content li,
+            .page-content ul,
+            .page-content ol {
+                font-size: calc(0.95rem * var(--mobile-font-scale, 0.72));
+            }
+
+            .page-footer {
+                font-size: calc(0.8rem * var(--mobile-font-scale, 0.72));
+                padding-top: 8px;
+                margin-top: 12px;
+                flex-shrink: 0;
+            }
+
+            h1 {
+                font-size: calc(2.1rem * var(--mobile-font-scale, 0.72));
+                margin-bottom: 10px;
+            }
+
+            h2 {
+                font-size: calc(1.45rem * var(--mobile-font-scale, 0.72));
+                margin-top: 6px;
+                margin-bottom: 8px;
+                padding-bottom: 5px;
+            }
+
+            h3 {
+                font-size: calc(1.15rem * var(--mobile-font-scale, 0.72));
+                margin-top: 8px;
+                margin-bottom: 5px;
+            }
+
+            p {
+                font-size: calc(0.95rem * var(--mobile-font-scale, 0.72));
+                line-height: 1.35;
+                margin-bottom: 7px;
+            }
+
+            ul, ol {
+                margin-left: 18px;
+                margin-bottom: 8px;
+                font-size: calc(0.95rem * var(--mobile-font-scale, 0.72));
+                line-height: 1.35;
+            }
+
+            li {
+                margin-bottom: 4px;
+                padding-left: 2px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="top-bar">
+        <span class="title-badge">📘 Módulo Interactivo Moodle - Unidad 3</span>
+        <span class="format-badge">E-book &bull; Formato A4</span>
+    </div>
+
+    <!-- Barra de Navegación -->
+    <div class="bottom-bar">
+        <button class="btn-nav" id="prevBtn">&larr; Página Anterior</button>
+        <div class="status-indicator" id="pageInfo">Hoja 1 de 12 (Págs. 1-2)</div>
+        <button class="btn-nav" id="nextBtn">Siguiente Página &rarr;</button>
+    </div>
+
+    <div class="book-stage">
+        <div class="book-wrapper" id="bookWrapper">
+            <div class="book" id="book">
+
+                <!-- HOJA 1: PORTADA Y TABLA DE CONTENIDOS -->
+                <div class="paper" id="p1">
+                    <div class="front cover">
+                        <div class="cover-content">
+                            <div class="unit-tag">UNIT 3</div>
+                            <h1>REFLECTION AND INNOVATION IN EFL</h1>
+                            <div class="subtitle">Didactics of the English Language II</div>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Table of Contents</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <h2 class="toc-title">Content Overview</h2>
+                            <ul class="toc-list">
+                                <li class="toc-item"><span class="toc-text">Reflection and Innovation in EFl, what does that mean?</span><span class="toc-dots"></span><span class="toc-page">3</span></li>
+                                <li class="toc-item"><span class="toc-text">Reflective teaching and professional growth</span><span class="toc-dots"></span><span class="toc-page">4</span></li>
+                                <li class="toc-item"><span class="toc-text">Action research and classroom observation techniques</span><span class="toc-dots"></span><span class="toc-page">6</span></li>
+                                <li class="toc-item"><span class="toc-text">Integrating innovation: task-based learning, CLIL, and PBL</span><span class="toc-dots"></span><span class="toc-page">9</span></li>
+                                <li class="toc-item"><span class="toc-text">Innovation’s implementation in the context of Colombian classrooms</span><span class="toc-dots"></span><span class="toc-page">11</span></li>
+                                <li class="toc-item"><span class="toc-text">Designing a reflective teaching portfolio</span><span class="toc-dots"></span><span class="toc-page">13</span></li>
+                                <li class="toc-item"><span class="toc-text">References</span><span class="toc-dots"></span><span class="toc-page">16</span></li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 2: INTRO & REFLECTIVE TEACHING 1 -->
+                <div class="paper" id="p2">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>Reflection and Innovation</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <h2>Reflection and Innovation in EFl, what does that mean?</h2>
+                            <p>The contemporary landscape of English as a Foreign Language (EFL) is currently defined by a "reflective-innovative" cycle. This approach suggests that true pedagogical progress occurs only when teachers critically analyze their current practices (reflection) to purposefully implement new effective changes (innovation). In this rapidly shifting landscape of EFL education the intersection of reflective practice and innovation has moved beyond simple classroom management into a sophisticated realm of digital literacy, emotional intelligence, and ethical AI integration.</p>
+
+                            <h3>The Evolution of Reflective Practice and Innovation through Technology</h3>
+                            <p>In 2024 and 2025, the concept of reflection has shifted from a retrospective "look back" to a proactive holistic tool. Farrell (2024) emphasizes that reflection-in-action must move beyond simple classroom management. Instead, he advocates for a "Holistic Reflective Framework" where teachers examine their spiritual, moral, and social values alongside their teaching methods. Furthermore, Ahmad and Hamid (2025) argue that reflection is the bridge between theory and the global market; by using structured reflection rubrics, teachers can better align their curriculum with the shifting professional needs of their students in a post-globalized world.</p>
+                            
+                            <p>Innovation in 2026 is no longer just about using the latest app; it is about the ethical and emotional integration of technology. Mustafa et al. (2024) highlight that the most successful innovations in EFL involve "Teacher Agency" in the age of AI. They suggest that while Generative AI can assist in material design, the teacher’s innovative role is to act as a "cognitive scaffold," ensuring that technology serves the learner’s specific emotional and cultural context.</p>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 3</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Reflective Teaching</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p>Pitura et al. (2025) have further explored innovation through Immersive Technologies. Their research shows that when teachers reflect on "embodied experiences" in virtual environments, they develop more creative ways to reduce "Foreign Language Classroom Anxiety" (Alotaibi & Alzu’bi, 2025), leading to more resilient and confident learners.</p>
+                            <p>The synergy between these two concepts creates a "virtuous cycle." As Kukulska-Hulme et al. (2024) note, innovation without reflection is merely "novelty," while reflection without innovation leads to "stagnation." In other words, reflection allows the teacher to identify gaps in student engagement or assessment, while innovation provides the tools (such as AI-driven feedback or gamified task-based learning) to bridge those gaps.</p>
+                            
+                            <h2>Reflective teaching and professional growth</h2>
+                            <p>As it was discussed before, reflective teaching means looking at what you do in the classroom, thinking about why you do it, and thinking about if it works - a process of self-observation and self-evaluation. Pennington (1992) describes reflective teaching as “a movement in teacher education in which … teachers analyze their own practice and their underlying basis and then consider alternative means of achieving their ends (p.48).”</p>
+                            
+                            <p>Richards & Lockhart (1994) add to this by incorporating a critical component, stating that a reflective approach to teaching is “one in which teachers and student teachers collect data about teaching, examine their attitudes, beliefs, assumptions and teaching practices, and use the information obtained as a basis for critical reflection about teaching (p.1).” They argue that such a critical reflection of one’s practices can trigger a deeper understanding of teaching and contribute to one’s professional development. It is through repeated cycles of professional development, practice and reflection, Wallace (1991) claims, that professional competence arises.</p>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 4</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 3: REFLECTIVE TEACHING 2 & ACTION RESEARCH -->
+                <div class="paper" id="p3">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>Data Collection Methods</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p>In accordance with Mohamed (2025), to carry out this practice and development it is important to begin by collecting information about what happens in the classroom. Such classroom data can be gathered in several ways:</p>
+                            
+                            <ul style="font-size: 0.85rem;">
+                                <li><strong>Maintain a teaching diary:</strong> this is a daily record of your professional experiences, particularly focusing on the events in the classroom. Include in your diary not only the events that occurred during the lesson, but also your own thoughts and feelings about it as well as students’ reactions.</li>
+                                <li><strong>Record a lesson:</strong> Recording a lesson is a useful way of getting information about your teaching that you may not have been aware of before. You could audio or video record the lesson. Lesson recordings can help you determine how much you talk; your movements; your tone of voice; etc.</li>
+                                <li><strong>Obtain feedback from students:</strong> Your own students are the best people to give you feedback on your teaching. You can ask them to comment on what they like and what they don’t like. You could ask them to complete a simple questionnaire which would give you specific information.</li>
+                                <li><strong>Invite a colleague to observe you:</strong> Getting feedback on your teaching through a colleague may be a different experience. You may ask your colleague to focus on a particular aspect of your teaching. Immediately after the lesson, discuss the lesson with your observer.</li>
+                            </ul>
+                            
+                            <p>The same author advises that once you have obtained information about what goes on in your lessons, the next step would be to think and analyze the following information:</p>
+                            <ul style="font-size: 0.85rem;">
+                                <li>What were your goals [for a particular lesson]?</li>
+                                <li>How did you intend to achieve those goals?</li>
+                                <li>What actually happened? How do you feel about this?</li>
+                                <li>What could you do/have done differently?</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 5</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Action Research</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p>In sum, reflective teaching is no longer viewed merely as an introspective exercise but as a systemic professional imperative. According to Brookfield & Preskill (2024), reflection must transcend "technical efficiency" and move toward "critical reflection," where educators question the power dynamics and assumptions underlying their pedagogical choices.</p>
+                            <p>Regarding professional growth, it is fostered when teachers engage in "Reflection-in-action" (during the lesson) and "Reflection-on-action" (after the lesson). Farrell (2025) suggests that structured reflective groups—or Community of Practice (CoP)—significantly accelerate the transition from novice to expert status.</p>
+                            
+                            <h2>Action research and classroom observation techniques</h2>
+                            <p>Action research is a systematic, cyclical process used by educators to improve teaching practices and solve classroom problems while classroom observation techniques are used to record data on student behavior and teacher methods.</p>
+                            
+                            <h3>Action Research (AR)</h3>
+                            <p>It serves as the bridge between theoretical educational research and practical classroom reality. It is a self-reflective spiral of planning, acting, observing, and reflecting. In line with Norton (2019), the action research approach is a cyclical and iterative method for improving your teaching. These actions are defined below, from the perspective of the UCLA Teaching and Learning Center (2025).</p>
+                            
+                            <ul>
+                                <li><strong>Observe:</strong> Consider which aspect of your teaching you want to improve based on student feedback, course data, and/or knowledge of research-based practices. Are you examining your teaching content, practices, or premise?</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 6</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 4: CLASSROOM OBSERVATION -->
+                <div class="paper" id="p4">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>Action Research (Cont.)</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p>You can look at course data—assignments, exam scores, writing samples—to gauge where students are performing well versus where they may be struggling. The way you gather data about your teaching will look different depending on the modality and class size.</p>
+                            
+                            <ul>
+                                <li><strong>Plan:</strong> Once you’ve observed the impacts of your current teaching approach, generate a course of action that involves changing something in your practice or course materials. Decide what to change, where, and when. You might provide a discussion prompt for pair or small group work.</li>
+                                <li><strong>Act:</strong> Carry out the change. If you’re teaching a smaller class, you can assess the impact of your actions during the class by observing how students work together. In a larger class, you may want to poll or survey students.</li>
+                                <li><strong>Reflect:</strong> Notice the effects of your change and plan your next actions accordingly, thus beginning another cycle of action research. Review the teaching goals you set and ask yourself whether you accomplished what you intended.</li>
+                            </ul>
+                            
+                            <p>Regarding this self-reflective spiral Mertler (2024) emphasizes that it turns into a systemic inquiry, that empowers teachers to become "researcher-practitioners" who solve localized classroom problems using data-driven decisions.</p>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 7</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Classroom Observation</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <h3>Classroom Observation Techniques</h3>
+                            <p>Modern classroom observation has evolved from evaluative checklists to collaborative and ethnographic tools. These techniques can be defined as structured methods used by educators, coaches, or administrators to evaluate teaching practices, student engagement, and the learning environment. Based on the College of Contract Management (CCM, 2024), through observation, teachers get feedback about what they do well and what needs improvement.</p>
+                            
+                            <p>Classroom observation also improves learning results. When educators use feedback to make changes, students benefit from better lessons and stronger teaching. By using different observation types, schools can create a fairer picture of teaching practices. Consistent with CCM (2024), here are the details on classroom observation types:</p>
+                            
+                            <ul>
+                                <li><strong>Learning walkthrough:</strong> A short visit to a classroom. The observer looks at how the teacher teaches and how students respond. It does not give a score but gives a quick view of the learning process.</li>
+                                <li><strong>Goal setting and implementation walkthrough:</strong> Focuses on agreed goals between the lecturer and the observer. The observer checks how the teacher works toward these goals in the classroom. It's monitoring progress.</li>
+                                <li><strong>Supervisory walkthrough:</strong> A formal type of classroom observation. Usually, school leaders or supervisors do it to check discussion in the classroom. After the visit, the supervisor gives feedback.</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 8</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 5: INTEGRATING INNOVATION (TBL, CLIL, PBL) -->
+                <div class="paper" id="p5">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>Observation Stages</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p>The observation process provides structure for how educators are observed and supported. It includes three important stages:</p>
+                            <ol>
+                                <li><strong>Pre-observation meeting:</strong> The teacher and observer meet to decide the focus of the visit. This step builds trust and helps both sides know what to expect.</li>
+                                <li><strong>During observation:</strong> The observer watches how the teacher explains lessons and manages the classroom. Notes are taken on student participation and key teaching strategies.</li>
+                                <li><strong>Post-observation feedback:</strong> The observer and teacher meet again to discuss strengths and improvements. Supportive feedback guides reflection and helps set future goals.</li>
+                            </ol>
+                            
+                            <p>Each stage connects with the next, making the whole process useful for both the teacher and the observer. With respect to peer observation, Richards & Farrell (2023) argue that non-judgmental peer observation, supported by video-stimulated recall (VSR), allows teachers to identify "blind spots" in their interactional patterns that are often invisible during the heat of teaching.</p>
+                            
+                            <h2>Integrating innovation: task-based learning, CLIL, and project-based learning.</h2>
+                            <p>Innovation in the 21st-century classroom is characterized by moving away from rote memorization toward active, meaningful, and integrated learning. The teaching of English as a foreign language (EFL) has undergone a significant transformation in recent years.</p>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 9</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>TBL & CLIL</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p>The underlying philosophy of Communicative Language Teaching (CLT) has positioned it as one of the most widely adopted approaches. For Uchkunovna (2024), CLT emphasizes real-life communication. Students engage in activities such as role-plays, discussions, and problem-solving tasks to develop their language skills in authentic contexts.</p>
+                            
+                            <h3>Task-Based Learning (TBL)</h3>
+                            <p>Is a method that has gained popularity in English language classrooms. In TBL, students work on authentic tasks that require them to use English to achieve a specific goal. Following the framework of Ellis et al. (2003), TBL prioritizes meaning over form. Pica (2004, cited by Vireak et. al, 2024) classifies tasks into five categories: jigsaw tasks, information-gap tasks, problem-solving tasks, decision-making tasks, and opinion-exchanging tasks.</p>
+                            <p>Key examples of TBL activities focus on real-world communication, such as designing a travel itinerary, role-playing job interviews, creating a classroom newspaper, or negotiating contracts. These tasks enhance fluency and collaborative skills.</p>
+
+                            <h3>Content and Language Integrated Learning (CLIL)</h3>
+                            <p>Content and Language Integrated Learning integrates the teaching of subject content with language learning objectives. Instead of teaching English in isolation, CLIL allows students to learn English while studying other subjects such as science, history, or mathematics. Coyle & Meyer (2023) highlight the "4Cs" framework (Content, Communication, Cognition, and Culture), noting that CLIL success depends on "scaffolding". Key examples include using infographics to study ecosystems or conducting science experiments.</p>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 6: COLOMBIAN CONTEXT -->
+                <div class="paper" id="p6">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>PBL & Colombian Context</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <h3>Problem-based learning (PBL)</h3>
+                            <p>Is a teaching approach where students not only learn through the process of solving real-world problems (Marcinauskas et al., 2024), but they also gain knowledge about a topic by tackling an open-ended problem. The main characteristics of PBL are: initiating the learning process with a problem, focusing on active learning, facilitating small group collaboration, providing guidance, and encouraging self-directed learning.</p>
+                            
+                            <p>Larmer (2025) identifies "Gold Standard PBL" as an approach where students work over an extended period to respond to an authentic, engaging, and complex question or problem. This promotes autonomy and 21st-century skills like collaboration and critical thinking.</p>
+                            
+                            <h2>Innovation’s implementation in the context of Colombian classrooms</h2>
+                            <p>Despite the transformation mentioned above, the implementation of TBL, CLIL, and PBL in the Colombian context requires a fundamental shift toward localized and inclusive pedagogical designs. Recent studies emphasize that these methodologies must move beyond the mere adoption of "Global North" frameworks to instead prioritize the ethical and institutional conditions of the specific Colombian setting (David & Brown, 2026).</p>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 11</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Colombian Context & Portfolio</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p>A secondary critical condition is the structural integration of technological mediation and authentic task design within the curriculum. Modern research highlights that the effectiveness of PBL and CLIL in Colombia is significantly enhanced when mediated by virtual pedagogical models, such as the "TEACH" model (Ortiz & López, 2026).</p>
+                            <p>The integration of active methodologies in the Colombian public sector faces a stark reality characterized by structural constraints that often hinder pedagogical innovation. As noted by Cárdenas (2006), the gap between centralized language policies and the classroom reality is widened by the "top-down" nature of the National Bilingualism Program. In these contexts, future teachers must navigate the friction between ideal theoretical frameworks and the practical limitations of overcrowded classrooms and limited technological resources.</p>
+                            <p>Finally, long-term success depends on institutional culture and continuous teacher professional development that addresses the emotional and professional identity of the educator (Pedagogical Constellations, 2026).</p>
+                            
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 12</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 7: PORTFOLIO CONTENTS -->
+                <div class="paper" id="p7">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>Teaching Portfolio</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <h2>Designing a Reflective Teaching Portfolio</h2>
+                            <p>According to the University of Limerick (n/d), a teaching portfolio is a record of your professional development as a teacher. It illustrates your philosophy of teaching and your overall approach to teaching, student learning, assessment and your professional development. Preparing a teaching portfolio requires teaching beliefs and practices to be put under the microscope (Trigwell, 2021).</p>
+                            <p>While your portfolio makes a case for who you are as a teacher, it should not be confused with a teaching CV. Good teaching portfolios are reflective documents, which provide a coherent narrative of the teacher’s professional journey.</p>
+                            <p><strong>Purpose:</strong> As stated by Mues & Sorcinelli (2000), teaching portfolios have two specific purposes: a) a developmental process for reflecting on and improving one’s teaching and b) an evaluative product for personnel decisions such as tenure, promotion, or a teaching award.</p>
+
+                            <h3>What to include in a reflective teaching portfolio?</h3>
+                            <p>Following the suggestions of the University of Limerick (n/d), when you are choosing materials and artefacts to demonstrate how your teaching has been effective, it is important to provide variety. While teaching portfolios are unique to each teacher, the following section headings should provide a helpful framework:</p>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 13</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Teaching Portfolio (Cont.)</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p><strong>1. Introduction. Statement of Teaching Philosophy</strong><br>
+                            The teaching philosophy is a statement about how you view teaching and your personal orientation towards teaching and learning. A number of questions to reflect on are:</p>
+                            <ul style="font-size: 0.85rem;">
+                                <li>What do I believe about teaching?</li>
+                                <li>What are my goals as a teacher?</li>
+                                <li>What demonstrates my desire to grow as a teacher?</li>
+                                <li>Has my approach to teaching changed?</li>
+                                <li>What role do my students play in the classroom?</li>
+                            </ul>
+                            
+                            <p><strong>2. Teaching Performance and Effectiveness</strong></p>
+                            <ul style="font-size: 0.85rem;">
+                                <li><em>Versatility, amount and level of teaching:</em> Clearly outline your teaching roles and responsibilities.</li>
+                                <li><em>Range of teaching strategies and quality of teaching:</em> How do you teach and/or enable learning in your modules?</li>
+                                <li><em>Teacher/class relationship:</em> What sort of classroom dynamic do you aim to develop?</li>
+                            </ul>
+
+                            <p><strong>3. Planning and Preparation</strong></p>
+                            <ul style="font-size: 0.85rem;">
+                                <li><em>Teaching and learning methods:</em> How do you develop and facilitate an effective learning experience for your students?</li>
+                                <li><em>Teaching materials:</em> What is the rationale behind the materials you use in class?</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 14</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 8: PORTFOLIO TIPS & REFERENCES 1 -->
+                <div class="paper" id="p8">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>Presentation & Conclusion</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content">
+                            <p><strong>4. Assessment and Examination of Student Learning</strong><br>
+                            Describe your approach to assessment and discuss any innovative assessment strategies or materials which you have developed:</p>
+                            <ul>
+                                <li><em>Assessment strategies:</em> What range of specific assessment strategies do you use?</li>
+                                <li><em>Innovation in assessment:</em> Have you designed new and effective methods of assessment?</li>
+                            </ul>
+                            
+                            <p><strong>5. Professional Development: Past, Present and Future</strong><br>
+                            This section gives you an opportunity to reflect upon and discuss how your teaching has developed during your career and your plans for future professional development. You might include information on the following:</p>
+                            <ul style="font-size: 0.85rem;">
+                                <li>Invitations to teach elsewhere (as guest lecturer)</li>
+                                <li>Publications in pedagogical journals</li>
+                                <li>Leadership in team teaching, contribution to the development of teaching</li>
+                                <li>Participation in third level teaching and learning training or workshops.</li>
+                            </ul>
+
+                            <p>Finally, it is useful to approach your portfolio as you would any piece of academic writing in terms of presentation. Ensure that you include the title page, clear headings, references from literature, and evidence to support your statements.</p>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 15</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Academic Sources</span>
+                            <span>References</span>
+                        </div>
+                        <div class="page-content">
+                            <h2>References</h2>
+                            <ul style="list-style: none; margin-left: 0; font-size: 0.72rem; line-height: 1.35;">
+                                <li style="margin-bottom: 8px;"><strong>Ahmad, S., & Hamid, M. O. (2025).</strong> Reflective Practice in EFL: Bridging the Gap between Classroom and Industry. Journal of Language Teaching Research.</li>
+                                <li style="margin-bottom: 8px;"><strong>Alotaibi, K., & Alzu’bi, M. A. (2025).</strong> Emotional Scaffolding and Anxiety in Blended Learning Environments. EFL Quarterly.</li>
+                                <li style="margin-bottom: 8px;"><strong>Álvarez Sánchez, B. (2026).</strong> Combining PBL and CLIL in the scientific laboratory in secondary education. Universidad Internacional de La Rioja.</li>
+                                <li style="margin-bottom: 8px;"><strong>Brookfield, S. & Preskill, S. (2024).</strong> Getting Lecturers to Take Discussion Seriously.</li>
+                                <li style="margin-bottom: 8px;"><strong>Cárdenas, M. L. (2006).</strong> Bilingual Colombia: Are we ready for it? What is needed? Proceedings of the 19th Annual EA Education Conference 2006.</li>
+                                <li style="margin-bottom: 8px;"><strong>Cárdenas, M. L., Chaves, O., & Hernández, F. (2010).</strong> Learning to teach English in the public school: A local research project to empower teachers. Editorial Universidad Nacional de Colombia.</li>
+                                <li style="margin-bottom: 8px;"><strong>College of Contract Management (CCM, 2024).</strong> Classroom Observation.</li>
+                                <li style="margin-bottom: 8px;"><strong>Coyle, Do and Meyer, Oliver (2023).</strong> An Introduction to the Special Issue 'Towards Pluriliteracies Approaches to Language Teaching and Learning. Cambridge University Press.</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 16</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 9: REFERENCES 2 & 3 -->
+                <div class="paper" id="p9">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>Academic Sources (Cont.)</span>
+                            <span>References</span>
+                        </div>
+                        <div class="page-content">
+                            <ul style="list-style: none; margin-left: 0; font-size: 0.72rem; line-height: 1.35;">
+                                <li style="margin-bottom: 8px;"><strong>David, R. D., & Brown, K. (2026).</strong> Disability, inclusion and language-in-education policy in the global south: The Colombian context. Center for Educational Policy Studies Journal, 12(4).</li>
+                                <li style="margin-bottom: 8px;"><strong>Davis, C.L. and Fitzpatrick, M. (2019).</strong> SEDA Special 42: Reflective Practice, London: SEDA.</li>
+                                <li style="margin-bottom: 8px;"><strong>Ellis, R. (2003).</strong> Task-based language learning and teaching. Oxford University.</li>
+                                <li style="margin-bottom: 8px;"><strong>Farrell, T. S. C. (2024).</strong> Beyond the Basics: A Holistic Approach to Reflective Practice for Language Teachers. Routledge.</li>
+                                <li style="margin-bottom: 8px;"><strong>Hornstein, H. A. (2017).</strong> Student evaluations of teaching are an inadequate assessment tool for evaluating faculty performance. Cogent Education, 4(1).</li>
+                                <li style="margin-bottom: 8px;"><strong>Klenowski, V., Askew, S., & Carnell, E. (2006).</strong> Portfolios for learning, assessment and professional development in higher education. Assessment & Evaluation in Higher Education, 31(3).</li>
+                                <li style="margin-bottom: 8px;"><strong>Kukulska-Hulme, A., et al. (2024).</strong> Innovative Pedagogy: AI-Enhanced Multimodal Writing in EFL. Open University Press.</li>
+                                <li style="margin-bottom: 8px;"><strong>Larmer, M. (2025).</strong> Gold standard PBL: Essential project design elements. Buck Institute for Education.</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 17</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Academic Sources (Cont.)</span>
+                            <span>References</span>
+                        </div>
+                        <div class="page-content">
+                            <ul style="list-style: none; margin-left: 0; font-size: 0.72rem; line-height: 1.35;">
+                                <li style="margin-bottom: 8px;"><strong>Mertler, B. (2024).</strong> Improving Schools and Empowering Educators. Seventh Edition. Craig USA.</li>
+                                <li style="margin-bottom: 8px;"><strong>Marcinauskas, l. et al. (2024).</strong> Problem-Based Learning versus Traditional Learning in Physics Education for Engineering Program Students.</li>
+                                <li style="margin-bottom: 8px;"><strong>Mues, F. & Deane-Sorcinelli, M. (2000).</strong> Preparing a Teaching Portfolio.</li>
+                                <li style="margin-bottom: 8px;"><strong>Mustafa, Z., et al. (2024).</strong> Ethical Governance and Teacher Agency in AI-Assisted Language Learning. Digital Education Review.</li>
+                                <li style="margin-bottom: 8px;"><strong>Mohamed, N. (2025).</strong> Macmillan Education Limited.</li>
+                                <li style="margin-bottom: 8px;"><strong>Morales, N., & Torres, L. (2026).</strong> Using CLIL for developing linguistic and reading comprehension competencies. Unidad Central del Valle del Cauca.</li>
+                                <li style="margin-bottom: 8px;"><strong>Norton, L. (2019).</strong> Action research in teaching and learning. Routledge, Taylor & Francis Group.</li>
+                                <li style="margin-bottom: 8px;"><strong>Ortiz, W., & López, J. (2026).</strong> Impact of TEACH: A virtual pedagogical model for teaching English as a foreign language. Enunciación, 31(1), 1–23.</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 18</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 10: REFERENCES 4 & 5 -->
+                <div class="paper" id="p10">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>Academic Sources (Cont.)</span>
+                            <span>References</span>
+                        </div>
+                        <div class="page-content">
+                            <ul style="list-style: none; margin-left: 0; font-size: 0.72rem; line-height: 1.35;">
+                                <li style="margin-bottom: 8px;"><strong>Pedagogical Constellations. (2026).</strong> Participation is not always about inclusion. Pedagogical Constellations.</li>
+                                <li style="margin-bottom: 8px;"><strong>Pennington, M. (1992).</strong> Reflecting on Teaching and Learning: a developmental focus for the second language classroom. HongKong: City Polytechnic.</li>
+                                <li style="margin-bottom: 8px;"><strong>Pitura, J., et al. (2025).</strong> Virtual Reality and Sensory Reflection: New Frontiers in Teacher Training. Technology in Pedagogy.</li>
+                                <li style="margin-bottom: 8px;"><strong>Richards, J. & Farrell, T. (2023).</strong> Professional development for language teachers. Ernst Klett Sprachen.</li>
+                                <li style="margin-bottom: 8px;"><strong>Richards, J. C., & Lockhart, C. (1994).</strong> Reflective Teaching in Second Language Classrooms. Cambridge University Press.</li>
+                                <li style="margin-bottom: 8px;"><strong>Sebolao, R. (2019).</strong> Enhancing the use of a teaching portfolio in higher education. The Independent Journal of Teaching and Learning, 14(2), 20-28.</li>
+                                <li style="margin-bottom: 8px;"><strong>Trigwell, K. (2021).</strong> Scholarship of teaching and learning. In University Teaching in Focus (pp. 286-303). Routledge.</li>
+                                <li style="margin-bottom: 8px;"><strong>Uchkunovna, Yakubjonova D. (2024).</strong> Teaching Exploring Innovative Methods. European Journal of Humanities and Educational Advancements, vol. 5, no. 4, pp. 86-89.</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 19</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <div class="page-header">
+                            <span>Academic Sources (Cont.)</span>
+                            <span>References</span>
+                        </div>
+                        <div class="page-content">
+                            <ul style="list-style: none; margin-left: 0; font-size: 0.72rem; line-height: 1.35;">
+                                <li style="margin-bottom: 8px;"><strong>UCLA Teaching and Learning Center (TLC). (2025).</strong> Leveraging Self-Reflection to Improve Your Teaching.</li>
+                                <li style="margin-bottom: 8px;"><strong>University of Limerick (n/d).</strong> Preparing your Teaching Portfolio.</li>
+                                <li style="margin-bottom: 8px;"><strong>Vélez, A. (2025).</strong> Active methodologies in Latin American education: A systematic review. Dialnet.</li>
+                                <li style="margin-bottom: 8px;"><strong>Vierak, K; et al. (2024).</strong> Teaching Methods: TBLT, CLIL, and PBL in Modern Classrooms.</li>
+                                <li style="margin-bottom: 8px;"><strong>Wallace, M. J. (1991).</strong> Training foreign language teachers: a reflective approach. Cambridge University Press.</li>
+                                <li style="margin-bottom: 8px;"><strong>Zubizarreta, J. (2004).</strong> The Learning Portfolio: Reflective Practice for Improving Student Learning.</li>
+                            </ul>
+                        </div>
+                        <div class="page-footer">
+                            <span class="page-num">Page 20</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 11: END OF CONTENT -->
+                <div class="paper" id="p11">
+                    <div class="front">
+                        <div class="page-header">
+                            <span>End of Content</span>
+                            <span>Unit 3</span>
+                        </div>
+                        <div class="page-content" style="align-items: center; justify-content: center; text-align: center;">
+                            <h2 style="border: none; margin: 0; padding: 0;">End of Unit 3</h2>
+                            <p style="text-align: center; color: #64748b; margin-top: 15px;">
+                                Didactics of the English Language II<br>Reflection and Innovation in EFL
+                            </p>
+                        </div>
+                        <div class="page-footer">
+                            <span style="color: var(--title-green); font-weight: 700;">End of Unit 3</span>
+                            <span class="page-num">Page 21</span>
+                        </div>
+                    </div>
+                    <div class="back">
+                        <!-- Hoja en blanco antes de contraportada -->
+                        <div class="page-footer">
+                            <span class="page-num">Page 22</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOJA 12: CONTRAPORTADA -->
+                <div class="paper" id="p12">
+                    <div class="front cover-back">
+                        <!-- Contratapa de cierre -->
+                    </div>
+                    <div class="back cover-back">
+                        <!-- Contratapa de cierre -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Lógica de Control de Páginas del Flipbook ---
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const pageInfo = document.getElementById("pageInfo");
+        const papers = Array.from(document.querySelectorAll(".paper"));
+
+        let currentLocation = 1;
+        const maxLocation = papers.length + 1;
+        let mobilePage = 1;
+        const totalMobilePages = (papers.length * 2) - 1;
+
+        function setZIndexes() {
+            papers.forEach((paper, index) => {
+                if (index + 1 < currentLocation) {
+                    paper.style.zIndex = index + 1;
+                } else {
+                    paper.style.zIndex = papers.length - index;
+                }
+            });
+        }
+
+        function updateMobileActive() {
+            if (window.innerWidth > 768) {
+                papers.forEach(p => p.classList.remove('active'));
+                return;
+            }
+            const paperIndex = Math.floor((mobilePage - 1) / 2);
+            papers.forEach((paper, index) => {
+                if (index === paperIndex) {
+                    paper.classList.add('active');
+                } else {
+                    paper.classList.remove('active');
+                }
+            });
+        }
+
+        function applyMobilePage() {
+            if (window.innerWidth > 768) return;
+
+            let paperIndex, showBack;
+            if (mobilePage === totalMobilePages) {
+                paperIndex = papers.length - 1;
+                showBack = false;
+            } else {
+                paperIndex = Math.floor((mobilePage - 1) / 2);
+                showBack = (mobilePage % 2) === 0;
+            }
+
+            papers.forEach((paper, index) => {
+                if (index < paperIndex) {
+                    paper.classList.add('flipped');
+                } else if (index === paperIndex) {
+                    if (showBack) {
+                        paper.classList.add('flipped');
+                    } else {
+                        paper.classList.remove('flipped');
+                    }
+                } else {
+                    paper.classList.remove('flipped');
+                }
+            });
+
+            currentLocation = paperIndex + 1 + (showBack ? 1 : 0);
+            updateMobileActive();
+            setZIndexes();
+        }
+
+        function updatePageInfo() {
+            if (window.innerWidth <= 768) {
+                const mobileTotalPages = (papers.length * 2) - 1;
+                if (mobilePage === 1) {
+                    pageInfo.innerText = `Portada (Pág. 1 de ${mobileTotalPages})`;
+                } else if (mobilePage === totalMobilePages) {
+                    pageInfo.innerText = `Contraportada (Pág. ${mobileTotalPages})`;
+                } else {
+                    pageInfo.innerText = `Página ${mobilePage} de ${mobileTotalPages}`;
+                }
+                prevBtn.disabled = mobilePage === 1;
+                nextBtn.disabled = mobilePage === totalMobilePages;
+                return;
+            }
+
+            const desktopTotalPages = (papers.length * 2) - 1;
+            const leftPage = (currentLocation - 1) * 2;
+            const rightPage = leftPage + 1;
+
+            if (currentLocation === 1) {
+                pageInfo.innerText = `Portada (Pág. 1 de ${desktopTotalPages})`;
+            } else if (currentLocation === maxLocation) {
+                pageInfo.innerText = `Contraportada (Pág. ${desktopTotalPages})`;
+            } else {
+                pageInfo.innerText = `Hoja ${currentLocation - 1} de ${papers.length} (Págs. ${leftPage}-${rightPage})`;
+            }
+
+            prevBtn.disabled = currentLocation === 1;
+            nextBtn.disabled = currentLocation === maxLocation;
+        }
+
+        function goNextPage() {
+            if (window.innerWidth <= 768) {
+                if (mobilePage < totalMobilePages) {
+                    mobilePage++;
+                    applyMobilePage();
+                    updatePageInfo();
+                }
+                return;
+            }
+
+            if (currentLocation < maxLocation) {
+                const currentPaper = papers[currentLocation - 1];
+                currentPaper.classList.add("flipped");
+                currentLocation++;
+                setZIndexes();
+                updatePageInfo();
+            }
+        }
+
+        function goPrevPage() {
+            if (window.innerWidth <= 768) {
+                if (mobilePage > 1) {
+                    mobilePage--;
+                    applyMobilePage();
+                    updatePageInfo();
+                }
+                return;
+            }
+
+            if (currentLocation > 1) {
+                currentLocation--;
+                const currentPaper = papers[currentLocation - 1];
+                currentPaper.classList.remove("flipped");
+                setZIndexes();
+                updatePageInfo();
+            }
+        }
+
+        nextBtn.addEventListener("click", goNextPage);
+        prevBtn.addEventListener("click", goPrevPage);
+
+        papers.forEach((paper, index) => {
+            paper.addEventListener("click", (e) => {
+                if (e.target.tagName === 'A') return;
+                if (window.innerWidth <= 768) return;
+                if (index + 1 === currentLocation) {
+                    goNextPage();
+                } else if (index + 1 === currentLocation - 1) {
+                    goPrevPage();
+                }
+            });
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight") goNextPage();
+            if (e.key === "ArrowLeft") goPrevPage();
+        });
+
+        // --- 2. Algoritmo de Auto-Escalado Responsive para Moodle/iframes ---
+        function resizeBook() {
+            const stage = document.querySelector('.book-stage');
+            const wrapper = document.getElementById('bookWrapper');
+            if (!stage || !wrapper) return;
+
+            if (window.innerWidth <= 768) {
+                wrapper.style.transform = '';
+                return;
+            }
+
+            const stageWidth = stage.clientWidth;
+            const stageHeight = stage.clientHeight;
+
+            const rootStyles = getComputedStyle(document.documentElement);
+            const pageWidth = parseFloat(rootStyles.getPropertyValue('--page-width'));
+            const pageHeight = parseFloat(rootStyles.getPropertyValue('--page-height'));
+
+            const targetWidth = pageWidth * 2;
+            const targetHeight = pageHeight;
+
+            const padding = 20;
+            const scaleX = (stageWidth - padding) / targetWidth;
+            const scaleY = (stageHeight - padding) / targetHeight;
+            const scale = Math.min(scaleX, scaleY);
+
+            wrapper.style.transform = `scale(${Math.max(scale, 0.3)})`;
+        }
+
+        window.addEventListener('resize', () => {
+            resizeBook();
+            applyMobilePage();
+            updatePageInfo();
+        });
+        window.addEventListener('DOMContentLoaded', () => {
+            setZIndexes();
+            applyMobilePage();
+            updatePageInfo();
+            resizeBook();
+        });
+
+        setTimeout(resizeBook, 100);
+    </script>
+</body>
+
+</html>
